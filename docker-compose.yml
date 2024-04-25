@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  api:
+    hostname: api
+    container_name: api
+    build:
+      context: .
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      #ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:5000
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db_postgres
+    networks:
+      - backend-network
+  db_postgres:
+    container_name: db-postgres
+    hostname: db-postgres
+    image: postgres:14.3
+    shm_size: 3g
+    environment:
+      TZ: GMT+3
+      POSTGRES_PASSWORD: AfS!Fb2cV0!dyLAS
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    ports:
+      - '62434:5432'
+    networks:
+      - backend-network
+    restart: unless-stopped
+  db_redis:
+    hostname: db-redis
+    container_name: db-redis
+    image: redis:6.0
+    restart: unless-stopped
+    ports:
+      - '64341:6379'
+    networks:
+      - backend-network
+networks:
+  backend-network:
+    name: backend
+    driver: bridge
