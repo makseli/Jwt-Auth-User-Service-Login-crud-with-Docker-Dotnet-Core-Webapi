@@ -56,11 +56,11 @@ Experience the future of web APIs, meticulously crafted with LINQ, .NET Core, Po
 - [x] Postgresql Integration
 - [x] User Crud 
 - [x] User Login & Jwt Auth
-- [x] Redis Connection & Set token key
+- [ ] Redis Connection & Set token key
 - [x] Docker Integration
 - [x] Config moving appsettings.json to docker environment
 - [ ] Write endpoint: List session user from redis
-- [ ] Control Jwt middleware user session from /api/v1/.. endpoints
+- [x] Control Jwt middleware user session from /api/v1/.. endpoints
 
 
 ## SS

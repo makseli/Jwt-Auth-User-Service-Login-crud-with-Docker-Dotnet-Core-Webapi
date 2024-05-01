@@ -63,11 +63,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// CORS Ayarları
+// CORS Setting
 app.UseCors("AllowAny");
 
 //app.UseHttpsRedirection();
-app.UseAuthentication();  // Authentication middleware'ini ekleyin
+app.UseAuthentication();  // Authentication middleware
 app.UseAuthorization();
 app.UseMiddleware<JwtMiddleware>();
 

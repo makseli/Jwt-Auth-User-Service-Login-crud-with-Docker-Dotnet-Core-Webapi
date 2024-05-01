@@ -7,13 +7,11 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
-using System.Runtime.Intrinsics.X86;
 
 public class JwtSettings
 {
     public string Key { get; set; }
     public string Issuer { get; set; }
-    // Diğer gerekli alanları ekleyebilirsiniz.
 }
 
 public class Startup
