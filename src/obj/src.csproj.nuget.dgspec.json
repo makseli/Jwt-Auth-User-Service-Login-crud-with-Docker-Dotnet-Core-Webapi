@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/makseli/yazilim/dEV/ME/jwt-auth/src/src.csproj": {}
+    "/home/makseli/yazilim/dEV/ME/test/Jwt-Auth-User-Service-Login-crud-with-Docker-Dotnet-Core-Webapi/src/src.csproj": {}
   },
   "projects": {
-    "/home/makseli/yazilim/dEV/ME/jwt-auth/src/src.csproj": {
+    "/home/makseli/yazilim/dEV/ME/test/Jwt-Auth-User-Service-Login-crud-with-Docker-Dotnet-Core-Webapi/src/src.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/makseli/yazilim/dEV/ME/jwt-auth/src/src.csproj",
+        "projectUniqueName": "/home/makseli/yazilim/dEV/ME/test/Jwt-Auth-User-Service-Login-crud-with-Docker-Dotnet-Core-Webapi/src/src.csproj",
         "projectName": "src",
-        "projectPath": "/home/makseli/yazilim/dEV/ME/jwt-auth/src/src.csproj",
+        "projectPath": "/home/makseli/yazilim/dEV/ME/test/Jwt-Auth-User-Service-Login-crud-with-Docker-Dotnet-Core-Webapi/src/src.csproj",
         "packagesPath": "/home/makseli/.nuget/packages/",
-        "outputPath": "/home/makseli/yazilim/dEV/ME/jwt-auth/src/obj/",
+        "outputPath": "/home/makseli/yazilim/dEV/ME/test/Jwt-Auth-User-Service-Login-crud-with-Docker-Dotnet-Core-Webapi/src/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/makseli/.nuget/NuGet/NuGet.Config"
@@ -77,14 +77,23 @@
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
           "downloadDependencies": [
             {
               "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[6.0.27, 6.0.27]"
+              "version": "[6.0.28, 6.0.28]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.linux-x64",
+              "version": "[6.0.28, 6.0.28]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[6.0.28, 6.0.28]"
             }
           ],
           "frameworkReferences": {
@@ -95,7 +104,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/6.0.127/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.103/RuntimeIdentifierGraph.json"
         }
       }
     }

@@ -23,15 +23,10 @@ namespace Src.Controllers
         [HttpGet]
         public ActionResult GetList(string? keyword)
         {
-            var type_id  = HttpContext.Items["type_id"];
 
-            IQueryable<VwUsers> query = _dbContext.VwUsers;
+            IQueryable<Users> query = _dbContext.UserModel;
 
             try{
-                    
-                if (type_id != null){
-                    query = query.Where(z => z.type_id == Convert.ToInt32(type_id));
-                }
 
                 if (keyword != null)
                 {
@@ -50,7 +45,7 @@ namespace Src.Controllers
                     );
                 }
               
-                List<VwUsers> users = query.ToList();
+                List<Users> users = query.ToList();
                 
                 return StatusCode(200, new{count= users.Count, result= users});
 
@@ -66,7 +61,7 @@ namespace Src.Controllers
         public ActionResult Post(UsersRegisterModel register)
         {
 
-            var sR = _dbContext.UserModel.Where(x => x.deleted_at == null && x.name_surname == register.name_surname || x.email == register.email).FirstOrDefault();
+            var sR = _dbContext.UserModel.Where(x =>  x.name_surname == register.name_surname || x.email == register.email).FirstOrDefault();
 
             if (sR != null)
             {

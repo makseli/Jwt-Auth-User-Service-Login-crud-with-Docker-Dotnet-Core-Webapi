@@ -18,12 +18,57 @@ This project epitomizes modern web development practices, harnessing LINQ's expr
 
 Experience the future of web APIs, meticulously crafted with LINQ, .NET Core, PostgreSQL, and Redis, harmonized within Docker containers for a truly dynamic and scalable application architecture.
 
+
+--------------------- 
+## FOR RUN STEPS
+1. ```docker comopose up -d ``` # // or docker-compose up -d 
+
+2. connect postgresql terminal
+
+3. ``` sql 
+    CREATE DATABASE "jwt-auth"   WITH OWNER "postgres"   ENCODING 'UTF8'; 
+```
+
+4. connect "jwt-auth" database
+
+5. ``` sql 
+
+    CREATE TABLE public.users (
+        id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+        email varchar NOT NULL,
+        "password" varchar NOT NULL,
+        work_title varchar NULL,
+        name_surname varchar NOT NULL,
+        phone varchar NULL,
+        type_id int NULL,
+        created_at timestamp with time zone DEFAULT now() NOT NULL,
+        updated_at timestamp with time zone DEFAULT NULL,
+        deleted_at timestamp with time zone DEFAULT NULL,
+        last_login_time timestamp with time zone DEFAULT NULL,
+        last_token varchar NULL,
+        last_token varchar NULL,
+        last_ip varchar NULL,
+    CONSTRAINT users_pk PRIMARY KEY (id));
+```
+
+
 -- TODO --
 - [x] Postgresql Integration
 - [x] User Crud 
 - [x] User Login & Jwt Auth
 - [x] Redis Connection & Set token key
 - [x] Docker Integration
-- [ ] Config moving appsettings.json to docker environment
+- [x] Config moving appsettings.json to docker environment
 - [ ] Write endpoint: List session user from redis
 - [ ] Control Jwt middleware user session from /api/v1/.. endpoints
+
+
+## SS
+First Login
+![screenshot](./docs/first_login.png)
+
+Api Key set Header
+![screenshot](./docs/apikey_set_for_header.png)
+
+Search & List User
+![screenshot](./docs/user_search.png)

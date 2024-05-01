@@ -64,15 +64,11 @@ public class JwtMiddleware
             }, out SecurityToken validatedToken);
 
             var jwtToken = (JwtSecurityToken)validatedToken;
-            var companyId = jwtToken.Claims.First(x => x.Type == "company_id").Value;
             var userType = jwtToken.Claims.First(x => x.Type == "type_id").Value;
             var userId = jwtToken.Claims.First(x => x.Type == "user_id").Value;
-            var companies = jwtToken.Claims.First(x => x.Type == "companies").Value;
 
             context.Items["user_id"] = userId;
             context.Items["type_id"] = userType;
-            context.Items["company_id"] = companyId;
-            context.Items["companies"] = companies;
 
         } catch (Exception ex)
         {

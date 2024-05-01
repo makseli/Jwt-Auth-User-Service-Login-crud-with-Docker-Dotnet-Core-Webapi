@@ -1,15 +1,22 @@
 version: '3.8'
 
 services:
-  api:
-    hostname: api
-    container_name: api
+  jwt_api:
+    hostname: jwt_api
+    container_name: jwt_api
     build:
       context: .
     environment:
-      ASPNETCORE_ENVIRONMENT: Development
-      #ASPNETCORE_ENVIRONMENT: Production
-      ASPNETCORE_URLS: http://+:5000
+      ASPNETCORE_ENVIRONMENT: "Development"
+      #ASPNETCORE_ENVIRONMENT: "Production"
+      ASPNETCORE_URLS: "http://+:5000"
+      POSTGRES_CONNECTION_STRING: "Host=db_postgres.backend;Port=5432;Database=jwt-auth;Username=postgres;Password=AfS!Fb2cV0!dyLAS"
+      REDIS_CONNECTION_STRING: "db_redis.backend:6379"
+      JET_KEY: "KeyFQGhfT!Jb^BVBBqE48O0wnueyX!ERtt*"
+      JWT_ISSUER: "makseliDev"
+      JWT_AUDIENCE: "makseliDev"
+      SECURITY_PASSWORD_SALT: "BVBBqE48O0wnueyX!ERtt*KeyFQGhfT!Jb^"
+      CORS_ALLOWED_HOST: "*"
     ports:
       - "5000:5000"
     depends_on:
@@ -17,8 +24,8 @@ services:
     networks:
       - backend-network
   db_postgres:
-    container_name: db-postgres
-    hostname: db-postgres
+    container_name: db_postgres
+    hostname: db_postgres
     image: postgres:14.3
     shm_size: 3g
     environment:
@@ -32,8 +39,8 @@ services:
       - backend-network
     restart: unless-stopped
   db_redis:
-    hostname: db-redis
-    container_name: db-redis
+    hostname: db_redis
+    container_name: db_redis
     image: redis:6.0
     restart: unless-stopped
     ports:

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "oFv2eCGpewHpR8IW2uiejo1QbcTXAYFebulQU48veDF4cQReGdr+YKSXpxfWh46t9UKFFaP15hescPL44clhZg==",
+  "dgSpecHash": "QQw1JXATMyDZB40GLPve/SfT0G5+7iPq8v7YY8VRhxDfolJ+yKLte21r6OduPLppiTmHcT9qhQEzOuEc+JJZ8g==",
   "success": true,
-  "projectFilePath": "/home/makseli/yazilim/dEV/ME/jwt-auth/src/src.csproj",
+  "projectFilePath": "/home/makseli/yazilim/dEV/ME/test/Jwt-Auth-User-Service-Login-crud-with-Docker-Dotnet-Core-Webapi/src/src.csproj",
   "expectedPackageFiles": [
     "/home/makseli/.nuget/packages/humanizer.core/2.8.26/humanizer.core.2.8.26.nupkg.sha512",
     "/home/makseli/.nuget/packages/microsoft.aspnetcore.authentication.jwtbearer/6.0.26/microsoft.aspnetcore.authentication.jwtbearer.6.0.26.nupkg.sha512",
@@ -56,7 +56,9 @@
     "/home/makseli/.nuget/packages/system.text.encoding/4.3.0/system.text.encoding.4.3.0.nupkg.sha512",
     "/home/makseli/.nuget/packages/system.text.encodings.web/4.7.2/system.text.encodings.web.4.7.2.nupkg.sha512",
     "/home/makseli/.nuget/packages/system.text.json/4.7.2/system.text.json.4.7.2.nupkg.sha512",
-    "/home/makseli/.nuget/packages/microsoft.aspnetcore.app.ref/6.0.27/microsoft.aspnetcore.app.ref.6.0.27.nupkg.sha512"
+    "/home/makseli/.nuget/packages/microsoft.netcore.app.ref/6.0.28/microsoft.netcore.app.ref.6.0.28.nupkg.sha512",
+    "/home/makseli/.nuget/packages/microsoft.aspnetcore.app.ref/6.0.28/microsoft.aspnetcore.app.ref.6.0.28.nupkg.sha512",
+    "/home/makseli/.nuget/packages/microsoft.netcore.app.host.linux-x64/6.0.28/microsoft.netcore.app.host.linux-x64.6.0.28.nupkg.sha512"
   ],
   "logs": []
 }

@@ -18,11 +18,12 @@ using Src.Utils;
 [ApiController]
 public class GeneralController : ControllerBase
 {
-    private readonly IConnectionMultiplexer _redisConnection;
+    //private readonly ConnectionMultiplexer _redisConnection;
     private readonly AppDbContext _dbContext;
-    public GeneralController(AppDbContext dbContext,IConnectionMultiplexer redisConnection)
+    //public GeneralController(AppDbContext dbContext, ConnectionMultiplexer redis)
+    public GeneralController(AppDbContext dbContext)
     {
-        _redisConnection = redisConnection;
+        //_redisConnection = redis;
         _dbContext = dbContext;
     }
 
@@ -33,7 +34,7 @@ public class GeneralController : ControllerBase
         return Ok(new {api_service_status_is = "Ok." });
     }
 
-    private string GenerateJwtToken(VwUsers user)
+    private string GenerateJwtToken(Users user)
     {
         var configuration = new ConfigurationBuilder()
         .SetBasePath(Directory.GetCurrentDirectory())
@@ -51,7 +52,6 @@ public class GeneralController : ControllerBase
                 new Claim(ClaimTypes.Name, user.email),
                 new Claim("type_id", user.type_id.ToString()),
                 new Claim("user_id", user.id.ToString()),
-                new Claim("company_id", user.company_id.ToString())
             }),
             
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -82,9 +82,26 @@ public class GeneralController : ControllerBase
     [HttpPost("/api/login")]
     public ActionResult Login([FromBody] LoginViewModel model)
     {
+
+        if (model.email == "admin" && model.password == "root")
+        {
+            Users user = new Users{
+                name_surname= "First Login",
+                type_id=0,
+                email="admin@root",
+                id=0,
+            };
+            // for first login
+            var token = GenerateJwtToken(user);
+            
+            saveTokenToDB(user.id, token);
+
+            return Ok(new { Token = token, user_id = user.id, validTo = ""}); // todo for validTo
+        }
+
         if (ModelState.IsValid)
         {
-            var user = _dbContext.VwUsers.Where(x => x.deleted_at == null && x.email == model.email).OrderByDescending(x => x.id).FirstOrDefault();
+            var user = _dbContext.UserModel.Where(x => x.deleted_at == null && x.email == model.email).OrderByDescending(x => x.id).FirstOrDefault();
 
             if (user == null)
                 return NotFound();
@@ -99,7 +116,7 @@ public class GeneralController : ControllerBase
                 
                 saveTokenToDB(user.id, token);
 
-                return Ok(new { Token = token, user_id = user.id, validTo = ""}); // todo
+                return Ok(new { Token = token, user_id = user.id, validTo = ""}); 
             }
         }
         return BadRequest(ModelState);
@@ -128,12 +145,12 @@ public class GeneralController : ControllerBase
 
             _dbContext.SaveChanges();
 
-            //redis save
-            IDatabase redisDb = _redisConnection.GetDatabase();
+            /*/redis save
+            var db = _redisConnection.GetDatabase();
 
             // set key token, value user model
             string serializedUser = JsonConvert.SerializeObject(u);
-            redisDb.StringSet(token, serializedUser);
+            db.StringSet(token, serializedUser);*/
 
             return true;
 

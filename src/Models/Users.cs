@@ -21,7 +21,7 @@ namespace Src.Models
         public DateTimeOffset? last_login_time {get; set;}
         public string? last_token  {get; set;}
         public string? last_ip  {get; set;}
-        public string? last_user_agent  {get; set;}        
+        public string? last_user_agent  {get; set;} 
     }
 
 }

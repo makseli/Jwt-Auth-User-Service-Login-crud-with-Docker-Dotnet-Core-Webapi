@@ -41,8 +41,10 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
+
+
 builder.Services.AddDbContext<AppDbContext>(
-    o => o.UseNpgsql(builder.Configuration.GetConnectionString("makseliDev"))
+    o => o.UseNpgsql(builder.Configuration["POSTGRES_CONNECTION_STRING"])
 );
 
 // CORS Settings TODO make your own info

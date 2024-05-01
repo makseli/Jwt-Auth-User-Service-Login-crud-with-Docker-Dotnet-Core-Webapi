@@ -6,11 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using System.IO;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using StackExchange.Redis;
+using System.Runtime.Intrinsics.X86;
 
 public class JwtSettings
 {
@@ -37,26 +34,30 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
-
-        var configuration = new ConfigurationBuilder()
+        // now .env or docker-compose environment use
+        /*var configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json")
-            .Build();
+            .Build();*/ 
+
+        var builder = new ConfigurationBuilder()
+            .AddEnvironmentVariables();
+
+        IConfiguration configuration = builder.Build();
 
         services.AddSingleton<IConfiguration>(configuration);
 
-        //get redis info
-        string redisConnectionString = Configuration.GetConnectionString("Redis");
+        /*string redisConnectionString = configuration["REDIS_CONNECTION_STRING"];
 
         // set Redis connection
-        services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(redisConnectionString));
+        services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(redisConnectionString));*/
 
-        services.Configure<JwtSettings>(Configuration.GetSection("Jwt"));
+        //services.Configure<JwtSettings>(Configuration.GetSection("Jwt"));
 
         //cors setting, now *
         services.AddCors(p => p.AddPolicy("corsapp", builder =>
         {
-            builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+            builder.WithOrigins(Configuration["CORS_ALLOWED_HOST"]).AllowAnyMethod().AllowAnyHeader();
         }));
         
         services.AddAuthentication(options =>
@@ -75,15 +76,15 @@ public class Startup
                 ValidateLifetime = true,
                 ValidateSignatureLast = true,
                 //ValidateIssuerSigningKey = true,
-                ValidIssuer = Configuration["Jwt:Issuer"],
-                ValidAudience = Configuration["Jwt:Audience"],
-                //IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+                ValidIssuer = Configuration["JWT_ISSUER"],
+                ValidAudience = Configuration["JWT_AUDIENCE"],
+                //IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JET_KEY"]))
             };
         });
 
         services.AddDbContext<AppDbContext>(options =>
         {
-            options.UseNpgsql(Configuration.GetConnectionString("makseliDev"));
+            options.UseNpgsql(Configuration["POSTGRES_CONNECTION_STRING"]);
             
         });
 
@@ -103,7 +104,7 @@ public class Startup
 
         services.AddControllers();
 
-        
+   
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
