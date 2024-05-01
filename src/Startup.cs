@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
+using Src.Utils;
 
 public class JwtSettings
 {
@@ -32,25 +33,13 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
-        // now .env or docker-compose environment use
-        /*var configuration = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json")
-            .Build();*/ 
-
         var builder = new ConfigurationBuilder()
             .AddEnvironmentVariables();
 
         IConfiguration configuration = builder.Build();
 
         services.AddSingleton<IConfiguration>(configuration);
-
-        /*string redisConnectionString = configuration["REDIS_CONNECTION_STRING"];
-
-        // set Redis connection
-        services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(redisConnectionString));*/
-
-        //services.Configure<JwtSettings>(Configuration.GetSection("Jwt"));
+        Util.Configure(configuration);
 
         //cors setting, now *
         services.AddCors(p => p.AddPolicy("corsapp", builder =>

@@ -12,7 +12,7 @@ services:
       ASPNETCORE_URLS: "http://+:5000"
       POSTGRES_CONNECTION_STRING: "Host=db_postgres.backend;Port=5432;Database=jwt-auth;Username=postgres;Password=AfS!Fb2cV0!dyLAS"
       REDIS_CONNECTION_STRING: "db_redis.backend:6379"
-      JET_KEY: "KeyFQGhfT!Jb^BVBBqE48O0wnueyX!ERtt*"
+      JWT_KEY: KeyFQGhfT!Jb^BVBBqE48O0wnueyX!ERtt*
       JWT_ISSUER: "makseliDev"
       JWT_AUDIENCE: "makseliDev"
       SECURITY_PASSWORD_SALT: "BVBBqE48O0wnueyX!ERtt*KeyFQGhfT!Jb^"

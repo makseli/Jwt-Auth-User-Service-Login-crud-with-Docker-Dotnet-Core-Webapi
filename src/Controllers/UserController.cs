@@ -6,6 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System;
 using Src.Utils;
+using Microsoft.Extensions.Configuration;
 
 namespace Src.Controllers
 {
@@ -14,10 +15,17 @@ namespace Src.Controllers
     public class UserController : ControllerBase
     {
         private readonly AppDbContext _dbContext;
-
-        public UserController(AppDbContext dbContext)
+        private readonly IConfiguration _configuration;
+        private readonly string _saltStr;
+        public UserController(AppDbContext dbContext, IConfiguration configuration)
         {
             _dbContext = dbContext;
+            _configuration = configuration;
+            
+            if (_configuration["SECURITY_PASSWORD_SALT"] == null)
+            {
+                _saltStr = "BVBBqE48O0wnueyX!ERtt*KeyFQGhfT!Jb^";
+            }
         }
 
         [HttpGet]
@@ -60,29 +68,31 @@ namespace Src.Controllers
         [HttpPost]
         public ActionResult Post(UsersRegisterModel register)
         {
-
-            var sR = _dbContext.UserModel.Where(x =>  x.name_surname == register.name_surname || x.email == register.email).FirstOrDefault();
-
-            if (sR != null)
-            {
-                return BadRequest(new { message = "Name Or E-mail Exist!" });
-            }
-
-            Users record = new Users();
-            record.type_id = register.type_id;
-            record.email = register.email;
-            record.name_surname = register.name_surname;
             
-            if (register.work_title != null)
-                record.work_title = register.work_title;
-            
-            if (register.phone != null)
-                record.phone = register.phone;
-
             try
             {
+                var sR = _dbContext.UserModel.Where(x =>  x.name_surname == register.name_surname || x.email == register.email).FirstOrDefault();
+
+                if (sR != null)
+                {
+                    return BadRequest(new { message = "Name Or E-mail Exist!" });
+                }
+                
+                Users record = new Users
+                {
+                    type_id = register.type_id,
+                    email = register.email,
+                    name_surname = register.name_surname
+                };
+
+                if (register.work_title != null)
+                    record.work_title = register.work_title;
+                
+                if (register.phone != null)
+                    record.phone = register.phone;
+            
                 record.created_at = DateTimeOffset.Now.ToUniversalTime();
-                record.password = Util.HashPassword(register.password);
+                record.password = Util.HashPassword(register.password, _saltStr);
                 _dbContext.UserModel.Add(record);
                 _dbContext.SaveChanges();
                 
@@ -90,7 +100,7 @@ namespace Src.Controllers
 
             } catch (Exception ex)
             {
-                Debug.WriteLine("ERR : ", ex.Message);
+                Console.WriteLine("ERR : ", ex.Message);
                 return StatusCode(500);
             }
         }
@@ -139,16 +149,16 @@ namespace Src.Controllers
                         return BadRequest(new { message = "Old Pass must be send !" });
                     }
 
-                    string hashedPassword = Util.HashPassword(old_password);
+                    string hashedPassword = Util.HashPassword(old_password, _saltStr);
 
                     if(sRu.password == hashedPassword)
                     {
-                        sRu.password = Util.HashPassword(record.password);
+                        sRu.password = Util.HashPassword(record.password, _saltStr);
                     }else{
                         return BadRequest(new { message = "Password Not Match!" });
                     }
 
-                    sRu.password = Util.HashPassword(record.password);
+                    sRu.password = Util.HashPassword(record.password, _saltStr);
                 }
 
                 if (record.work_title != null && sRu.work_title != record.work_title)

@@ -8,7 +8,6 @@ using System.Security.Claims;
 using System.Diagnostics;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
-using System.IO;
 using System.Linq;
 using System;
 using StackExchange.Redis;
@@ -18,31 +17,33 @@ using Src.Utils;
 [ApiController]
 public class GeneralController : ControllerBase
 {
-    //private readonly ConnectionMultiplexer _redisConnection;
+    private readonly IDatabase _redisConnection;
     private readonly AppDbContext _dbContext;
-    //public GeneralController(AppDbContext dbContext, ConnectionMultiplexer redis)
-    public GeneralController(AppDbContext dbContext)
+    private readonly IConfiguration _configuration;
+    public GeneralController(AppDbContext dbContext, IConfiguration configuration,IConnectionMultiplexer muxer)
     {
-        //_redisConnection = redis;
+        _redisConnection = muxer.GetDatabase();
         _dbContext = dbContext;
+        _configuration = configuration;
     }
 
     [HttpGet("/")]
     public ActionResult Home()
     {
         // todo, may have add some postgresql & redis connection check
-        return Ok(new {api_service_status_is = "Ok." });
+        _redisConnection.StringSet("keeey", "vall");
+        return Ok(new {api_service_status_is = "Ok.", redis_ping_response_time=_redisConnection.Ping().ToString()});
     }
 
     private string GenerateJwtToken(Users user)
     {
-        var configuration = new ConfigurationBuilder()
-        .SetBasePath(Directory.GetCurrentDirectory())
-        .AddJsonFile("appsettings.json")
-        .Build();
 
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(configuration["Jwt:Key"]);
+        string jwtKey = _configuration["JWT_KEY"];
+        if(jwtKey == null){
+            jwtKey = "KeyFQGhfT!Jb^BVBBqE48O0wnueyX!ERtt*";
+        }
+        var key = Encoding.ASCII.GetBytes(jwtKey);
         
         var tokenDescriptor = new SecurityTokenDescriptor
         {
@@ -71,8 +72,13 @@ public class GeneralController : ControllerBase
 
     private bool validateUserCredentials(string userPassword, string password)
     {
+        string saltStr = _configuration["SECURITY_PASSWORD_SALT"];
+        if (saltStr == null)
+        {
+            saltStr = "BVBBqE48O0wnueyX!ERtt*KeyFQGhfT!Jb^";
+        }
         // hash password
-        string hashedPassword = Util.HashPassword(password);
+        string hashedPassword = Util.HashPassword(password, saltStr);
 
         // Chech Hash
         return userPassword == hashedPassword;
@@ -94,7 +100,7 @@ public class GeneralController : ControllerBase
             // for first login
             var token = GenerateJwtToken(user);
             
-            saveTokenToDB(user.id, token);
+            //saveTokenToDB(user.id, token);
 
             return Ok(new { Token = token, user_id = user.id, validTo = ""}); // todo for validTo
         }
@@ -128,6 +134,7 @@ public class GeneralController : ControllerBase
         var userAgent = HttpContext.Request.Headers["User-Agent"].ToString();
 
         var u = _dbContext.UserModel.Find(userId);
+
         if (u == null)
         {
             return false;
@@ -145,12 +152,9 @@ public class GeneralController : ControllerBase
 
             _dbContext.SaveChanges();
 
-            /*/redis save
-            var db = _redisConnection.GetDatabase();
-
-            // set key token, value user model
+            // redis save set key token, value user model
             string serializedUser = JsonConvert.SerializeObject(u);
-            db.StringSet(token, serializedUser);*/
+            _redisConnection.StringSet(token, serializedUser);
 
             return true;
 

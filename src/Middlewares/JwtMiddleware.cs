@@ -52,7 +52,13 @@ public class JwtMiddleware
     private void AttachToContext(HttpContext context, string token)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
+        
+        string jwtKey = _configuration["JWT_KEY"];
+        if(jwtKey == null){
+            jwtKey = "KeyFQGhfT!Jb^BVBBqE48O0wnueyX!ERtt*";
+        }
+
+        var key = Encoding.ASCII.GetBytes(jwtKey);
 
         try{
             tokenHandler.ValidateToken(token, new TokenValidationParameters

@@ -56,7 +56,7 @@ Experience the future of web APIs, meticulously crafted with LINQ, .NET Core, Po
 - [x] Postgresql Integration
 - [x] User Crud 
 - [x] User Login & Jwt Auth
-- [ ] Redis Connection & Set token key
+- [x] Redis Connection & Set token key
 - [x] Docker Integration
 - [x] Config moving appsettings.json to docker environment
 - [ ] Write endpoint: List session user from redis

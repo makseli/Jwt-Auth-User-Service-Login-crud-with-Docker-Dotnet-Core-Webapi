@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using System;
+using StackExchange.Redis;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,7 +14,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-//builder.Services.AddSwaggerGen();
+
+
 builder.Services.AddSwaggerGen(c =>
 {
 
@@ -42,10 +43,22 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+string redisConnStr = builder.Configuration["REDIS_CONNECTION_STRING"];
 
-builder.Services.AddDbContext<AppDbContext>(
-    o => o.UseNpgsql(builder.Configuration["POSTGRES_CONNECTION_STRING"])
-);
+if(redisConnStr == null)
+{
+    redisConnStr = "0.0.0.0:64341";
+}
+
+builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(redisConnStr));
+
+string postgresConnStr = builder.Configuration["POSTGRES_CONNECTION_STRING"];
+if (postgresConnStr == null)
+{
+    postgresConnStr = "Host=localhost;Port=62434;Database=jwt-auth;Username=postgres;Password=AfS!Fb2cV0!dyLAS";
+}
+
+builder.Services.AddDbContext<AppDbContext>(o => o.UseNpgsql(postgresConnStr));
 
 // CORS Settings TODO make your own info
 builder.Services.AddCors(options =>
